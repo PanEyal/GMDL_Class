@@ -63,7 +63,7 @@ def get_embedding(model,dataloader):
     for data in dataloader:
         X,Y = data
         with torch.no_grad():
-            _,code = model(X)
+            code = model.encode(X)
         embeddings = np.hstack([embeddings,code.numpy().T])
         labels = np.hstack([labels,np.squeeze(Y.numpy())])
     return embeddings,labels
