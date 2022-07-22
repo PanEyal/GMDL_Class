@@ -1,7 +1,15 @@
-import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from torchvision import datasets
+
+### load the MNIST data set and corresponding labels
+def load_MNIST(batch_size_train=10000, random_seed=False):
+    train_set = datasets.MNIST('./data', train=True, download=True)
+    X = train_set.data.numpy()
+    Y = train_set.targets.numpy()
+    choice = np.random.choice(range(X.shape[0]), size=batch_size_train, replace=False)
+    return X[choice], Y[choice]
 
 ###
 # plot a scatter plot of coordinates with labels labels
