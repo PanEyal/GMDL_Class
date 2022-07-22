@@ -9,7 +9,9 @@ def load_MNIST(batch_size_train=10000, random_seed=False):
     X = train_set.data.numpy()
     Y = train_set.targets.numpy()
     choice = np.random.choice(range(X.shape[0]), size=batch_size_train, replace=False)
-    return X[choice], Y[choice]
+    X = X[choice]
+    Y = Y[choice]
+    return X.reshape(X.shape[0], X.shape[1] * X.shape[2] ), Y
 
 ###
 # plot a scatter plot of coordinates with labels labels

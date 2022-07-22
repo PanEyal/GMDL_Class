@@ -16,7 +16,6 @@ def PCA(X, components):
 
 def main():
     X, Y = utils.load_MNIST()
-    X = X.reshape((X.shape[0], X.shape[1] * X.shape[2]))
     tdr_X = PCA(X, 2)
     utils.scatter_plot(tdr_X, Y, 10)
 
