@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from torchvision import datasets
+from tqdm import tqdm
 
 ### load the MNIST data set and corresponding labels
 def load_MNIST(batch_size_train=10000, random_seed=False):
@@ -25,23 +26,35 @@ def scatter_plot(coordinates,labels,k):
         ax.scatter(data[0],data[1],label=str(i),alpha=0.3,s=10)
     ax.legend(markerscale=2)
     plt.show()
-    
+
+###
+# plot the losses graph
+###
+def losses_plot(autoencoder_losses, linear_autoencoder_losses):
+    plt.title('Loss on models')
+    plt.plot(autoencoder_losses, label='autoencoder_loss')
+    plt.plot(linear_autoencoder_losses, label='linear_autoencoder_loss')
+    plt.xlabel("iterations")
+    plt.ylabel("loss")
+    plt.legend()
+    plt.show()
 
 ### FOR THE AUTOENCODER PART
 def train(num_epochs,dataloader,model,criterion,optimizer):
-    for epoch in range(num_epochs):
+    loss_array = []
+    for epoch in tqdm(range(num_epochs)):
         for data in dataloader:
             img, _ = data
             # ===================forward=====================
-            output,_ = model(img)
+            output = model(img)
             loss = criterion(output, img)
             # ===================backward====================
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
         # ===================log========================
-        print('epoch [{}/{}], loss:{:.4f}'
-              .format(epoch + 1, num_epochs, loss.item()))
+        loss_array.append(loss.item())
+    return loss_array
 
 def get_embedding(model,dataloader):
     model.eval()

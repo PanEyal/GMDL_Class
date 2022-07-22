@@ -98,6 +98,7 @@ def main():
     linear_autoencoder_losses = utils.train(30, train_loader, model, criterion, optimaizer)
     embeddings, labels = utils.get_embedding(model, train_loader)
     utils.scatter_plot(embeddings, labels, 10)
+    utils.losses_plot(autoencoder_losses, linear_autoencoder_losses)
 
 if __name__ == "__main__":
     main()
