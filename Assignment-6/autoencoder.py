@@ -47,12 +47,31 @@ class autoencoder(nn.Module):
 
 class linear_autoencoder(nn.Module):
     def __init__(self):
-        super(autoencoder, self).__init__()
-        # TODO : write your code here
+        super(linear_autoencoder, self).__init__()
+        self.name = "linear_autoencoder"
 
-    def forward(self, x):
-        # TODO : write your code here
-        pass
+        # Encoder: affine function
+        self.encode = torch.nn.Sequential(
+            nn.Linear(28 * 28, 128),
+            nn.Linear(128, 64),
+            nn.Linear(64, 8),
+            nn.Linear(8, 4),
+            nn.Linear(4, 2)
+        )
+        # Decoder: affine function
+        self.decode = torch.nn.Sequential(
+            nn.Linear(2, 4),
+            nn.Linear(4, 8),
+            nn.Linear(8, 64),
+            nn.Linear(64, 128),
+            nn.Linear(128, 28 * 28)
+        )
+
+    def forward(self, X):
+        out = self.encode(X)
+        out = self.decode(out)
+
+        return out
 
 
 def main():
@@ -79,10 +98,6 @@ def main():
     linear_autoencoder_losses = utils.train(30, train_loader, model, criterion, optimaizer)
     embeddings, labels = utils.get_embedding(model, train_loader)
     utils.scatter_plot(embeddings, labels, 10)
-
-    utils.losses_plot(autoencoder_losses, linear_autoencoder_losses)
-    # TODO : write your code here (import MNIST data, set dataloaders, train, etc)
-    pass
 
 if __name__ == "__main__":
     main()
