@@ -14,24 +14,16 @@ class autoencoder(nn.Module):
         self.encode = torch.nn.Sequential(
             nn.Linear(28 * 28, 128),
             nn.ReLU(),
-            nn.Linear(128, 64),
+            nn.Linear(128, 8),
             nn.ReLU(),
-            nn.Linear(64, 8),
-            nn.ReLU(),
-            nn.Linear(8, 4),
-            nn.ReLU(),
-            nn.Linear(4, 2),
+            nn.Linear(8, 2),
             nn.ReLU()
         )
         # Decoder: affine function
         self.decode = torch.nn.Sequential(
-            nn.Linear(2, 4),
+            nn.Linear(2, 8),
             nn.ReLU(),
-            nn.Linear(4, 8),
-            nn.ReLU(),
-            nn.Linear(8, 64),
-            nn.ReLU(),
-            nn.Linear(64, 128),
+            nn.Linear(8, 128),
             nn.ReLU(),
             nn.Linear(128, 28 * 28),
             nn.ReLU()
@@ -52,17 +44,13 @@ class linear_autoencoder(nn.Module):
         # Encoder: affine function
         self.encode = torch.nn.Sequential(
             nn.Linear(28 * 28, 128),
-            nn.Linear(128, 64),
-            nn.Linear(64, 8),
-            nn.Linear(8, 4),
-            nn.Linear(4, 2)
+            nn.Linear(128, 8),
+            nn.Linear(8, 2)
         )
         # Decoder: affine function
         self.decode = torch.nn.Sequential(
-            nn.Linear(2, 4),
-            nn.Linear(4, 8),
-            nn.Linear(8, 64),
-            nn.Linear(64, 128),
+            nn.Linear(2, 8),
+            nn.Linear(8, 128),
             nn.Linear(128, 28 * 28)
         )
 
@@ -74,7 +62,7 @@ class linear_autoencoder(nn.Module):
 
 
 def main():
-    X, Y = utils.load_MNIST()
+    X, Y = utils.load_MNIST(random_seed=1)
     scalar = StandardScaler(with_std=False)
     X = scalar.fit_transform(X)
     X = torch.tensor(X, dtype=torch.float32)
@@ -86,7 +74,7 @@ def main():
     model = autoencoder()
     criterion = nn.MSELoss()
     optimaizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    autoencoder_losses = utils.train(30, train_loader, model, criterion, optimaizer)
+    autoencoder_losses = utils.train(50, train_loader, model, criterion, optimaizer)
     embeddings, labels = utils.get_embedding(model, train_loader)
     utils.scatter_plot(embeddings, labels, 10)
 
@@ -94,7 +82,7 @@ def main():
     model = linear_autoencoder()
     criterion = nn.MSELoss()
     optimaizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    linear_autoencoder_losses = utils.train(30, train_loader, model, criterion, optimaizer)
+    linear_autoencoder_losses = utils.train(50, train_loader, model, criterion, optimaizer)
     embeddings, labels = utils.get_embedding(model, train_loader)
     utils.scatter_plot(embeddings, labels, 10)
     utils.losses_plot(autoencoder_losses, linear_autoencoder_losses)
