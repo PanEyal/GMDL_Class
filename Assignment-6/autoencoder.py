@@ -1,5 +1,4 @@
 # Import Libraries
-import numpy as np
 import torch
 from torch import nn
 from sklearn.preprocessing import StandardScaler
@@ -87,7 +86,7 @@ def main():
     model = autoencoder()
     criterion = nn.MSELoss()
     optimaizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    autoencoder_losses = utils.train(20, train_loader, model, criterion, optimaizer)
+    autoencoder_losses = utils.train(30, train_loader, model, criterion, optimaizer)
     embeddings, labels = utils.get_embedding(model, train_loader)
     utils.scatter_plot(embeddings, labels, 10)
 
@@ -95,7 +94,7 @@ def main():
     model = linear_autoencoder()
     criterion = nn.MSELoss()
     optimaizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    linear_autoencoder_losses = utils.train(20, train_loader, model, criterion, optimaizer)
+    linear_autoencoder_losses = utils.train(30, train_loader, model, criterion, optimaizer)
     embeddings, labels = utils.get_embedding(model, train_loader)
     utils.scatter_plot(embeddings, labels, 10)
     utils.losses_plot(autoencoder_losses, linear_autoencoder_losses)

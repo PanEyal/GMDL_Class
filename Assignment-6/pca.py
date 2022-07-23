@@ -6,12 +6,13 @@ import utils
 
 def PCA(X, components):
     scalar = StandardScaler(with_std=False)
-    X_normd = scalar.fit_transform(X)
-    correlation = np.cov(X_normd.transpose())
-    eigenvalues, eigenvectors = np.linalg.eigh(correlation)
-    p_components = eigenvectors[:, eigenvalues.shape[0] - components:]
-    p_components[:, [0, 1]] = p_components[:, [1, 0]]
-    return np.matmul(X, p_components).transpose()
+    X_normd = scalar.fit_transform(X.transpose())
+    cov_mat = np.cov(X_normd)
+    eigenvalues, eigenvectors = np.linalg.eigh(cov_mat)
+    reducing_size = eigenvalues.shape[0] - components
+    pc = eigenvectors[:, reducing_size:]
+    pc[:, [0, 1]] = pc[:, [1, 0]]
+    return np.matmul(X, pc).transpose()
 
 
 def main():
